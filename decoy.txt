@@ -1,0 +1,1 @@
+CPU:4.2GHZ-8cores RAM:16GB NETWORK:3mbps

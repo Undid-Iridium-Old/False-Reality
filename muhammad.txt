@@ -1,0 +1,93 @@
+Muhammad Part
+
+https://askubuntu.com/questions/28926/how-to-monitor-network-bandwidth-per-user-on-ubuntu-server
+
+https://serverfault.com/questions/133949/linux-users-traffic-measurement
+
+https://www.networkworld.com/article/3196138/whos-hogging-the-network.html
+
+https://unix.stackexchange.com/questions/36815/find-out-network-traffic-per-ip
+https://www.binarytides.com/python-packet-sniffer-code-linux/
+
+
+
+
+https://unix.stackexchange.com/questions/375387/how-to-trace-networking-activity-of-a-command
+
+https://unix.stackexchange.com/questions/343493/how-to-monitor-tcp-traffic-between-my-localhost-and-ip-adress
+
+
+
+
+https://www.tcpdump.org/manpages/tcpdump.1.html
+
+format:
+
+src > dst: Flags [tcpflags], seq data-seqno, ack ackno, win window, urg urgent, options [opts], length len
+
+
+
+IP rtsg.1023 > csam.login: Flags [P.], seq 2:21, ack 1, win 4096, length 19
+Location with port 1023 sent data to login, S (syn flag), packet seq (2:21) (19 diff meaning data was sent)
+(P. Push data), 
+Win : Window is the number of bytes of receive buffer space available the other direction on this connection
+
+Urg indicates there is `urgent' data in the packet. 
+Opts are TCP options (e.g., mss 1024). 
+Len is the length of payload data.
+
+
+https://stackoverflow.com/questions/25731643/how-to-schedule-tcpdump-to-run-for-a-specific-time-of-period
+https://stackoverflow.com/questions/3730964/python-script-execute-commands-in-terminal
+
+
+
+https://www.cyberciti.biz/faq/tcpdump-capture-record-protocols-port/
+sudo tcpdump -i eth0 'port 80' -w mycapture.tcpdump
+tcpdump -r mycapture.tcpdump
+
+
+
+	sudo timeout 10 tcpdump -G 15 -i eth0 'port 22' -w mycapture.tcpdump
+	tcpdump -r mycapture.tcpdump
+
+
+https://stackoverflow.com/questions/3730964/python-script-execute-commands-in-terminal
+
+import subprocess
+test = subprocess.Popen(["sudo","timeout", "10", "tcpdump","-i","eth0", "port 22", "-w", "port22dump"], stdout=subprocess.PIPE)
+output = test.communicate()[0]
+secondTest = subprocess.Popen(["tcpdump", "-r", "port22dump"], stdout = subprocess.PIPE)
+output = secondTest.communicate() [0]
+
+
+tcpdump -r port22dump
+
+-G 15 (Seconds)
+
+Advanced Filtering
+Print only useful packets from the HTTP traffic
+
+
+
+
+~ # tcpdump -A -s 0 -q -t -i eth0 'port 80 and ( ((ip[2:2] - ((ip[0]&0xf)<<2)) - ((tcp[12:2]&0xf0)>>2)) != 0)'
+http://edoceo.com/cli/tcpdump
+
+
+
+
+
+#Better Version, lines print correctly.
+import subprocess
+test = subprocess.Popen(["sudo","timeout", "10", "tcpdump","-i","eth0", "port 22", "-w", "port22dump"], stdout=subprocess.PIPE)
+output = test.communicate()
+secondTest = subprocess.Popen(["tcpdump", "-r", "port22dump"], stdout = subprocess.PIPE)
+#outputTest = secondTest.communicate()
+#print(outputTest)
+
+with secondTest.stdout:
+    for line in iter(secondTest.stdout.readline, b''):
+        print(line)
+secondTest.wait() # wait for the subprocess to exit
+
