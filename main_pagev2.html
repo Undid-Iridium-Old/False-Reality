@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<!--
+<video id="myVideo" width="820" height="520" controls>
+  <!--<source src="/var/www/html/Video1.mp4" type="video/mp4">
+  <source src="mov_bbb.ogg" type="video/ogg">
+
+  <source src="/static/Video1.mp4#t=50" type="video/mp4"></source>
+  Your browser does not support HTML5 video.
+</video>-->
+
+
+
+
+ <div id="main">
+
+      <video class="v" src="/static/Video1.mp4#t={{timestamp}}" poster=""
+             autobuffer controls></video>
+
+      <form name="displayurl" action="">
+        <label for="offseturl">Link to this video:</label>
+        <input name="offseturl" type="text" readonly="" value="" size="50" onclick="document.displayurl.offseturl.focus();document.displayurl.offseturl.select();"/>
+      </form>
+
+      <form name="jumptime" action="javascript:jumpToTimeoffset(document.jumptime);" method="">
+        <label for="jumptime">Jump to time offset:</label>
+        <input name="time" type="number"/>
+        <input name="button" type="button" value="Jump" onclick="jumpToTimeoffset(this.form)"/>
+      </form>
+
+      <form name="videourl" action="javascript:changeVideoUrl(document.videourl);" method="">
+        <label for="videourl">Change video element url:</label>
+        <input name="url" type="text" value="/static/Video1.mp4#t=20" size="40"/>
+        <input name="button" type="button" value="Change" onclick="changeVideoUrl(this.form)"/>
+      </form>
+
+
+    </div>
+
+<script type=text/javascript src="{{
+  url_for('static', filename='jquery.js') }}"></script>
+
+
+
+
+<script type="text/javascript">
+  // get video element
+  var video = document.getElementsByTagName("video")[0];
+
+  // get page URL without fragment & time offset
+    var currenturl = location.href;
+    var pageurl = location.href.split("#")[0];
+  var offsettime = retrieveTimeFragment(currenturl);
+
+  // set cut-paste-entry to currenturl as default
+    document.displayurl.offseturl.value = currenturl;
+
+  // once video is loaded, jump to time offset
+  video.addEventListener("loadedmetadata", function() {
+    // calculate video url & offset
+    // jump to offset given in video url
+    // START: THIS SHOULD BE NATIVE IN BROWSER
+    var videourl = video.currentSrc;
+    var videooffset = retrieveTimeFragment(videourl);
+    if (videooffset != 0) {
+      video.currentTime = videooffset;
+    }
+    // END: THIS SHOULD BE NATIVE IN BROWSER
+
+    // first time only: jump to offset given in page url
+    if (offsettime != 0) {
+      video.currentTime = offsettime;
+      offsettime = 0;
+    }
+  }, false);
+
+  // set callback for video to update page URL with time offset when paused
+  video.addEventListener("pause", function() {
+      videotime = video.currentTime;
+      changePageUrlOffset(videotime);
+    }, false);
+
+    // when the hash on the window changes, also do an offset
+    window.addEventListener("hashchange", function() {
+      var url = location.href;
+      var time = retrieveTimeFragment(url);
+    video.currentTime = time;
+    // update cut-and-paste url
+      document.displayurl.offseturl.value = location.href;
+    }, false);
+
+    // jump to time offset action
+    function jumpToTimeoffset(form) {
+    var time = form.time.value;
+      video.currentTime = time;
+    changePageUrlOffset(time);
+    }
+
+    // change the video's url
+    function changeVideoUrl(form) {
+      var newurl = form.url.value;
+      video.src = newurl;
+    // possibly the change of a hash on a video's src attribute could be done
+    // without having to re-load the file
+      video.load();
+    var newurloffset = retrieveTimeFragment(newurl);
+      changePageUrlOffset(newurloffset);
+    }
+
+    // parse the time hash out of the given url
+    function retrieveTimeFragment(url) {
+      var pageoffset = 0;
+    var offsettime = 0;
+      if (url.split("#")[1] != null) {
+      pageoffset = url.split("#")[1];
+      if (pageoffset.substring(2) != null) {
+        offsettime = pageoffset.substring(2);
+      }
+    }
+    return offsettime;
+    }
+
+    // change urls
+    function changePageUrlOffset(time) {
+      // update page url
+    location.hash = "#t=" + time;
+      // update cut-and-paste url
+      document.displayurl.offseturl.value = location.href;
+    }
+
+</script>
+
+
+
+<script>
+var vid = document.getElementsByTagName("video")[0];
+
+function getCurTime() {
+  alert(vid.currentTime);
+}
+
+function setCurTime() {
+  vid.currentTime+=5;
+}
+
+function setTime(variable){
+  vid.currentTime = variable;
+}
+function getTime(){
+	alert(vid.currentTime);
+	return vid.currentTime;
+}
+
+function sendTime(){
+	alert("I am here")
+	document.getElementById("getTime").value = vid.currentTime
+}
+
+function redirect(){
+	alert("You are being redirected to new service")
+}
+</script>
+<form method="post" action="/home">
+<input type="submit" value=getTime() name="getTime" onclick="sendTime()"/>
+<!--<button onclick="getCurTime()" type="button">Get current time position</button>-->
+<button onclick="setCurTime()" type="button">Set time position to +5 seconds</button><br>
+</form>
+
+<form method="get" action="192.170.230.110:5000/home">
+<input type="submit" value="Redirect-Link" name="Redirect" onclick="redirect()"/>
+</form>
+
+
+<!--<button onclick="getCurTime()" type="button">Get current time position</button>
+<button onclick="setCurTime()" type="button">Set time position to +5 seconds</button><br> -->
+<p>Video courtesy of <a href="https://snapchaching.com" target="_blank">Capstone meme</a>.</p>
+
+</body>
+</html>
