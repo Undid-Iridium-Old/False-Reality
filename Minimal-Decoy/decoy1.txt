@@ -1,0 +1,10 @@
+CPU:73 RAM:14 Network:48
+CPU:81 RAM:90 Network:12
+CPU:72 RAM:96 Network:20
+CPU:47 RAM:67 Network:37
+CPU:73 RAM:75 Network:88
+CPU:45 RAM:33 Network:35
+CPU:77 RAM:21 Network:60
+CPU:31 RAM:89 Network:37
+CPU:20 RAM:11 Network:40
+CPU:31 RAM:72 Network:66
