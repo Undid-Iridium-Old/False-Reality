@@ -49,4 +49,6 @@ As for starting the service, you do the following
 4) Attacker (waitress-serve --port=5000 attacker_UI:app)
 5) Increase intensity once (you can do multiple but the connection limit makes it pointless)
 6) Data is "migrated" (Apparently someone originally migrated it to the OVS and then left it there, I think the plan was supposed to be Server -> OVS -> Decoy Comp); however, the files are there, and ready
-7) Simply click the redirect button to get to the page
+7) Simply click the redirect button to get to the page  
+
+There are other files requires such for the decoys to send data back; however, it can be done relatively with the files in Minimal-Decoy as you can send and receive data based on the machine publically routeable IP's
